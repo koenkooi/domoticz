@@ -81,7 +81,7 @@ CAnnaThermostat::CAnnaThermostat(const int ID, const std::string& IPAddress, con
 
 void CAnnaThermostat::OnError(const std::exception &e)
 {
-	_log.Log(LOG_ERROR, "AnnaTherm: Error: %s", e.what());
+	_log.Log(LOG_ERROR, "Plugwise: Error: %s", e.what());
 }
 void CAnnaThermostat::CAnnaThermostat::Init()
 {
@@ -122,7 +122,7 @@ bool CAnnaThermostat::StopHardware()
 void CAnnaThermostat::Do_Work()
 {
 	bool bFirstTime = true;
-	Log(LOG_STATUS, "AnnaTherm:Worker started...");
+	Log(LOG_STATUS, "Plugwise:Worker started...");
 	int sec_counter = ANNA_POLL_INTERVAL - 5;
 	while (!IsStopRequested(1000))
 	{
@@ -145,7 +145,7 @@ void CAnnaThermostat::Do_Work()
 		}
 
 	}
-	Log(LOG_STATUS, "AnnaTherm: Worker stopped...");
+	Log(LOG_STATUS, "Plugwise: Worker stopped...");
 }
 
 void CAnnaThermostat::SendSetPointSensor(const unsigned char Idx, const float Temp, const std::string& defaultname)
@@ -220,7 +220,7 @@ void CAnnaThermostat::SetSetpoint(const int /*idx*/, const float temp)
 
 	if (!HTTPClient::PUT(szURL.str(), sPostData.str(), ExtraHeaders, sResult, true))
 	{
-		Log(LOG_ERROR, "AnnaTherm: Error setting setpoint!");
+		Log(LOG_ERROR, "Plugwise: Error setting setpoint!");
 		return;
 	}
 }
@@ -272,7 +272,7 @@ bool CAnnaThermostat::AnnaSetPreset(uint8_t level)
 		strcpy(szTemp, "no_frost");
 		break;
 	default:
-		Log(LOG_STATUS, "AnnaTherm: Invalid value for Preset %i .. Aborting Switch", level);
+		Log(LOG_STATUS, "Plugwise: Invalid value for Preset %i .. Aborting Switch", level);
 		return false;
 	}
 	Log(LOG_STATUS, "Switching Anna gateway preset to: %s", szTemp);
@@ -300,7 +300,7 @@ bool CAnnaThermostat::AnnaSetPreset(uint8_t level)
 #else
 	if (!HTTPClient::PUT(szURL.str(), sPostData.str(), ExtraHeaders, sResult, true))
 	{
-		Log(LOG_ERROR, "AnnaTherm: Error setting Preset State !");
+		Log(LOG_ERROR, "Plugwise: Error setting Preset State !");
 		return false;
 	}
 #endif
@@ -358,7 +358,7 @@ bool CAnnaThermostat::AnnaToggleProximity(bool bToggle)
 #else
 	if (!HTTPClient::PUT(szURL.str(), sPostData.str(), ExtraHeaders, sResult, true))
 	{
-		Log(LOG_ERROR, "AnnaTherm: Error setting toggle Proximity !");
+		Log(LOG_ERROR, "Plugwise: Error setting toggle Proximity !");
 		return false;
 	}
 #endif
@@ -429,19 +429,19 @@ void CAnnaThermostat::GetMeterDetails()
 
 	if (!HTTPClient::GET(szURL.str(), sResult))
 	{
-		Log(LOG_ERROR, "AnnaTherm: Error getting current state!");
+		Log(LOG_ERROR, "Plugwise: Error getting current state!");
 		return;
 	}
 #endif
 	if (sResult.empty())
 	{
-		Log(LOG_ERROR, "AnnaTherm: No or invalid data received!");
+		Log(LOG_ERROR, "Plugwise: No or invalid data received!");
 		return;
 	}
 	TiXmlDocument doc;
 	if (doc.Parse(sResult.c_str(), nullptr, TIXML_ENCODING_UTF8) && doc.Error())
 	{
-		Log(LOG_ERROR, "AnnaTherm: Cannot parse XML");
+		Log(LOG_ERROR, "Plugwise: Cannot parse XML");
 		return;
 	}
 
@@ -455,7 +455,7 @@ void CAnnaThermostat::GetMeterDetails()
 	pRoot = doc.FirstChildElement("appliances");
 	if (!pRoot)
 	{
-		Log(LOG_ERROR, "AnnaTherm: Cannot find appliances in XML");
+		Log(LOG_ERROR, "Plugwise: Cannot find appliances in XML");
 		return;
 	}
 	pAppliance = pRoot->FirstChildElement("appliance");
@@ -466,7 +466,7 @@ void CAnnaThermostat::GetMeterDetails()
 		pElem = pAppliance->FirstChildElement("name");
 		if (pElem == nullptr)
 		{
-			Log(LOG_ERROR, "AnnaTherm: Cannot find appliance attributes");
+			Log(LOG_ERROR, "Plugwise: Cannot find appliance attributes");
 			return;
 		}
 		std::string ApplianceName = pElem->GetText();
@@ -488,14 +488,14 @@ void CAnnaThermostat::GetMeterDetails()
 		pElem = hAppliance.FirstChild("logs").FirstChild().Element();
 		if (!pElem)
 		{
-			Log(LOG_ERROR, "AnnaTherm: Cannot find logs in XML");
+			Log(LOG_ERROR, "Plugwise: Cannot find logs in XML");
 			return;
 		}
 		//TiXmlHandle hLogs = TiXmlHandle(pElem);
 		pElem = hAppliance.FirstChild("logs").Child("point_log", 0).ToElement();
 		if (!pElem)
 		{
-			Log(LOG_ERROR, "AnnaTherm: No log points found in XML");
+			Log(LOG_ERROR, "Plugwise: No log points found in XML");
 			return;
 		}
 		for (pElem; pElem; pElem = pElem->NextSiblingElement())
@@ -503,7 +503,7 @@ void CAnnaThermostat::GetMeterDetails()
 
 			sname = GetElementChildValue(pElem, "type");
 			tmpstr = GetPeriodMeasurement(pElem);
-			Log (LOG_NORM,"AnnaTherm: Appliance %s %s : %s ", ApplianceName.c_str(), sname.c_str(),  tmpstr.c_str());
+			Log (LOG_NORM,"Plugwise: Appliance %s %s : %s ", ApplianceName.c_str(), sname.c_str(),  tmpstr.c_str());
 			if (sname == "temperature")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
@@ -615,7 +615,7 @@ void CAnnaThermostat::GetMeterDetails()
 				}
 				if (m_ProximityID.empty())
 				{
-					Log(LOG_ERROR, "AnnaTherm: Error getting ProximityID !");
+					Log(LOG_ERROR, "Plugwise: Error getting ProximityID !");
 					return;
 				}
 				tmpstr = GetPeriodMeasurement(pElem);
@@ -638,7 +638,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (m_AnnaLocation.m_ALocationID.empty())
 				{
 					if (!AnnaGetLocation()) {
-						Log(LOG_ERROR, "AnnaTherm: Error getting Location Information !");
+						Log(LOG_ERROR, "Plugwise: Error getting Location Information !");
 						return;
 					}
 				}
@@ -714,19 +714,19 @@ bool CAnnaThermostat::AnnaGetLocation()
 
 	if (!HTTPClient::GET(szURL.str(), sResult))
 	{
-		Log(LOG_ERROR, "AnnaTherm: Error getting location Info !");
+		Log(LOG_ERROR, "Plugwise: Error getting location Info !");
 		return false;
 	}
 #endif
 	if (sResult.empty())
 	{
-		Log(LOG_ERROR, "AnnaTherm: No or invalid location data received!");
+		Log(LOG_ERROR, "Plugwise: No or invalid location data received!");
 		return false;
 	}
 	TiXmlDocument doc;
 	if (doc.Parse(sResult.c_str(), nullptr, TIXML_ENCODING_UTF8) && doc.Error())
 	{
-		Log(LOG_ERROR, "AnnaTherm: Cannot parse XML");
+		Log(LOG_ERROR, "Plugwise: Cannot parse XML");
 		return false;
 	}
 
@@ -738,7 +738,7 @@ bool CAnnaThermostat::AnnaGetLocation()
 	pRoot = doc.FirstChildElement("domain_objects");
 	if (!pRoot)
 	{
-		Log(LOG_ERROR, "AnnaTherm: Cannot find domain info in XML");
+		Log(LOG_ERROR, "Plugwise: Cannot find domain info in XML");
 		return false;
 	}
 	pLocation = pRoot->FirstChildElement("location");
@@ -755,7 +755,7 @@ bool CAnnaThermostat::AnnaGetLocation()
 			}
 			else
 			{
-				Log(LOG_ERROR, "AnnaTherm: Cannot get location id ");
+				Log(LOG_ERROR, "Plugwise: Cannot get location id ");
 				return false;
 			}
 		}
@@ -763,14 +763,14 @@ bool CAnnaThermostat::AnnaGetLocation()
 	pElem = pLocation->FirstChildElement("name");
 	if (pElem == nullptr)
 	{
-		Log(LOG_ERROR, "AnnaTherm: Cannot find Location name");
+		Log(LOG_ERROR, "Plugwise: Cannot find Location name");
 		return false;
 	}
 	m_AnnaLocation.m_ALocationName = pElem->GetText();
 	pElem = pLocation->FirstChildElement("type");
 	if (pElem == nullptr)
 	{
-		Log(LOG_ERROR, "AnnaTherm: Cannot find Location type");
+		Log(LOG_ERROR, "Plugwise: Cannot find Location type");
 		return false;
 	}
 	m_AnnaLocation.m_ALocationType = pElem->GetText();
