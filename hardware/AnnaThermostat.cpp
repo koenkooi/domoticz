@@ -462,6 +462,7 @@ void CAnnaThermostat::GetMeterDetails()
 	while (pAppliance)
 	{
 		TiXmlHandle hAppliance = TiXmlHandle(pAppliance);
+		unsigned int batterypercentage = 255;
 
 		pElem = pAppliance->FirstChildElement("name");
 		if (pElem == nullptr)
@@ -510,7 +511,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 1, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 1, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "illuminance")
@@ -519,7 +520,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float illuminance = (float)atof(tmpstr.c_str());
-					SendLuxSensor(appliance + 2, 1, 255, illuminance, ApplianceName + " " + sname);
+					SendLuxSensor(appliance + 2, 1, batterypercentage, illuminance, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "thermostat")
@@ -537,7 +538,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 4, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 4, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "return_water_temperature")
@@ -546,7 +547,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 5, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 5, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "boiler_temperature")
@@ -555,7 +556,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 6, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 6, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "maximum_boiler_temperature")
@@ -564,7 +565,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 7, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 7, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "central_heater_water_pressure")
@@ -573,7 +574,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float pressure = (float)atof(tmpstr.c_str());
-					SendPressureSensor(appliance + 8, 0, 255, pressure, ApplianceName + " " + sname);
+					SendPressureSensor(appliance + 8, 0, batterypercentage, pressure, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "valve_position")
@@ -582,7 +583,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float valveposition = (float)atof(tmpstr.c_str()) * 100;
-					SendPercentageSensor(appliance + 8, 0, 255, valveposition, ApplianceName + " " + sname);
+					SendPercentageSensor(appliance + 8, 0, batterypercentage, valveposition, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "battery")
@@ -590,7 +591,7 @@ void CAnnaThermostat::GetMeterDetails()
 				tmpstr = GetPeriodMeasurement(pElem);
 				if (!tmpstr.empty())
 				{
-					int batterypercentage = (float)atof(tmpstr.c_str()) * 100;
+					batterypercentage = (float)atof(tmpstr.c_str()) * 100;
 					SendPercentageSensor(appliance + 9, 0, batterypercentage, batterypercentage, ApplianceName + " " + sname);
 				}
 			}
