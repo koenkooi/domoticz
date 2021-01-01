@@ -449,6 +449,8 @@ void CAnnaThermostat::GetMeterDetails()
 	TiXmlElement* pAppliance, * pElem;
 	TiXmlAttribute* pAttribute;
 	std::string sname, tmpstr;
+	unsigned short appliance = 0;
+	unsigned int subappliance = 0;
 
 	pRoot = doc.FirstChildElement("appliances");
 	if (!pRoot)
@@ -508,7 +510,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(1, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 1, 255, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "illuminance")
@@ -517,7 +519,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float illuminance = (float)atof(tmpstr.c_str());
-					SendLuxSensor(2, 1, 255, illuminance, ApplianceName + " " + sname);
+					SendLuxSensor(appliance + 2, 1, 255, illuminance, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "thermostat")
@@ -526,7 +528,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendSetPointSensor(3, temperature, ApplianceName + " " + sname);
+					SendSetPointSensor(appliance + 3, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "intended_boiler_temperature")
@@ -535,7 +537,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(4, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 4, 255, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "return_water_temperature")
@@ -544,7 +546,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(5, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 5, 255, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "boiler_temperature")
@@ -553,7 +555,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(6, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 6, 255, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "maximum_boiler_temperature")
@@ -562,7 +564,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(7, 255, temperature, ApplianceName + " " + sname);
+					SendTempSensor(appliance + 7, 255, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "boiler_state")
@@ -671,6 +673,8 @@ void CAnnaThermostat::GetMeterDetails()
 				SendSelectorSwitch(sAnnaPresets, 1, sPreset, PresetName, 16, false, ANNA_LEVEL_NAMES, ANNA_LEVEL_ACTIONS, true, m_Name.c_str());
 			}
 		}
+		// Increase the appliance by 32, this should be safe since the maximum number of items encountered so far is 18
+		appliance += 32;
 		pAppliance = pAppliance->NextSiblingElement("appliance");
 	}
 }
