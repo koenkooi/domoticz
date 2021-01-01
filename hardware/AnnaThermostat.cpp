@@ -585,6 +585,15 @@ void CAnnaThermostat::GetMeterDetails()
 					SendPercentageSensor(appliance + 8, 0, 255, valveposition, ApplianceName + " " + sname);
 				}
 			}
+			else if (sname == "battery")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					int batterypercentage = (float)atof(tmpstr.c_str()) * 100;
+					SendPercentageSensor(appliance + 9, 0, batterypercentage, batterypercentage, ApplianceName + " " + sname);
+				}
+			}
 			else if (sname == "boiler_state")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
