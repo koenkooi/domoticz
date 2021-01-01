@@ -567,6 +567,15 @@ void CAnnaThermostat::GetMeterDetails()
 					SendTempSensor(appliance + 7, 255, temperature, ApplianceName + " " + sname);
 				}
 			}
+			else if (sname == "central_heater_water_pressure")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					float pressure = (float)atof(tmpstr.c_str());
+					SendPressureSensor(appliance + 8, 0, 255, pressure, ApplianceName + " " + sname);
+				}
+			}
 			else if (sname == "boiler_state")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
