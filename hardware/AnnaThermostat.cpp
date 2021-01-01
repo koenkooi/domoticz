@@ -576,6 +576,15 @@ void CAnnaThermostat::GetMeterDetails()
 					SendPressureSensor(appliance + 8, 0, 255, pressure, ApplianceName + " " + sname);
 				}
 			}
+			else if (sname == "valve_position")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					float valveposition = (float)atof(tmpstr.c_str()) * 100;
+					SendPercentageSensor(appliance + 8, 0, 255, valveposition, ApplianceName + " " + sname);
+				}
+			}
 			else if (sname == "boiler_state")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
