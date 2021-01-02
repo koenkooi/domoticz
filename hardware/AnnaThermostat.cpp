@@ -583,7 +583,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float valveposition = (float)atof(tmpstr.c_str()) * 100;
-					SendPercentageSensor(appliance + 8, 0, batterypercentage, valveposition, ApplianceName + " " + sname);
+					SendPercentageSensor(appliance + 9, 0, batterypercentage, valveposition, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "battery")
@@ -592,7 +592,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					batterypercentage = (float)atof(tmpstr.c_str()) * 100;
-					SendPercentageSensor(appliance + 9, 0, batterypercentage, batterypercentage, ApplianceName + " " + sname);
+					SendPercentageSensor(appliance + 10, 0, batterypercentage, batterypercentage, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "boiler_state")
