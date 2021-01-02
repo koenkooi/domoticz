@@ -645,6 +645,21 @@ void CAnnaThermostat::GetMeterDetails()
 					}
 				}
 			}
+			else if (sname == "intended_central_heating_state")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					if (strcmp(tmpstr.c_str(), "on") == 0)
+					{
+						SendSwitch(appliance + 15, 1, 255, true, 0, ApplianceName + " " + sname, m_Name);
+					}
+					else
+					{
+						SendSwitch(appliance + 15, 1, 255, false, 0, ApplianceName + " " + sname, m_Name);
+					}
+				}
+			}
 			else if (sname == "boiler_state")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
