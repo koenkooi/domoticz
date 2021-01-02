@@ -604,6 +604,15 @@ void CAnnaThermostat::GetMeterDetails()
 					SendPercentageSensor(appliance + 11, 0, batterypercentage, modulation, ApplianceName + " " + sname);
 				}
 			}
+			else if (sname == "maximum_modulation_level")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					float maxmodulation = (float)atof(tmpstr.c_str()) * 100;
+					SendPercentageSensor(appliance + 12, 0, batterypercentage, maxmodulation, ApplianceName + " " + sname);
+				}
+			}
 			else if (sname == "boiler_state")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
