@@ -613,6 +613,38 @@ void CAnnaThermostat::GetMeterDetails()
 					SendPercentageSensor(appliance + 12, 0, batterypercentage, maxmodulation, ApplianceName + " " + sname);
 				}
 			}
+			else if (sname == "lan_state")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					if (strcmp(tmpstr.c_str(), "up") == 0)
+					{
+
+						SendSwitch(appliance + 13, 1, batterypercentage, true, 0, ApplianceName + " " + sname, m_Name);
+					}
+					else
+					{
+						SendSwitch(appliance + 13, 1, batterypercentage, false, 0, ApplianceName + " " + sname, m_Name);
+					}
+				}
+			}
+			else if (sname == "wlan_state")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					if (strcmp(tmpstr.c_str(), "up") == 0)
+					{
+
+						SendSwitch(appliance + 14, 1, batterypercentage, true, 0, ApplianceName + " " + sname, m_Name);
+					}
+					else
+					{
+						SendSwitch(appliance + 14, 1, batterypercentage, false, 0, ApplianceName + " " + sname, m_Name);
+					}
+				}
+			}
 			else if (sname == "boiler_state")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
