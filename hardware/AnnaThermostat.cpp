@@ -690,6 +690,15 @@ void CAnnaThermostat::GetMeterDetails()
 					}
 				}
 			}
+			else if (sname == "domestic_hot_water_temperature")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					float hotwatertemperature = (float)atof(tmpstr.c_str());
+					SendTempSensor(appliance + 7, batterypercentage, hotwatertemperature, ApplianceName + " " + sname);
+				}
+			}
 			else if (sname == "boiler_state")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
