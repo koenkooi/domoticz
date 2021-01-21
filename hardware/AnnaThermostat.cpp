@@ -705,6 +705,16 @@ void CAnnaThermostat::GetMeterDetails()
 					}
 				}
 			}
+			else if (sname == "electricity_consumed")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					// Reported value is Wh per 15 minutes, to keep this stateless do a dirty conversion to W
+					float plugusage = (float)atof(tmpstr.c_str()) * 4.0;
+					SendWattMeter(appliance + 19, 0, batterypercentage, plugusage, ApplianceName + " " + sname);
+				}
+			}
 			else if (sname == "domestic_hot_water_temperature")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
