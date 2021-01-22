@@ -715,6 +715,15 @@ void CAnnaThermostat::GetMeterDetails()
 					SendWattMeter(appliance + 19, 0, batterypercentage, plugusage, ApplianceName + " " + sname);
 				}
 			}
+			else if (sname == "humidity")
+			{
+				tmpstr = GetPeriodMeasurement(pElem);
+				if (!tmpstr.empty())
+				{
+					float humidity = (float)atof(tmpstr.c_str());
+					SendHumiditySensor(appliance + 20, batterypercentage, humidity, ApplianceName + " " + sname);
+				}
+			}
 			else if (sname == "domestic_hot_water_temperature")
 			{
 				tmpstr = GetPeriodMeasurement(pElem);
