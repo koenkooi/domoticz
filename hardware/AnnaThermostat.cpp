@@ -463,26 +463,32 @@ void CAnnaThermostat::GetMeterDetails()
 	{
 		TiXmlHandle hAppliance = TiXmlHandle(pAppliance);
 		unsigned int batterypercentage = 255;
+		std::string applianceID = "";
+
+		pAttribute = pAppliance->FirstAttribute();
+		if (pAttribute != nullptr)
+		{
+			std::string aName = pAttribute->Name();
+			if (aName == "id")
+			{
+				applianceID = pAttribute->Value();
+				Log(LOG_NORM, "Appliance ID: %s", applianceID.c_str());
+			}
+		} else {
+			Log(LOG_ERROR, "Appliance: Cannot find appliance ID");
+		}
 
 		pElem = pAppliance->FirstChildElement("name");
 		if (pElem == nullptr)
 		{
-			Log(LOG_ERROR, "Plugwise: Cannot find appliance attributes");
+			Log(LOG_ERROR, "Appliance: Cannot find appliance attributes");
 			return;
 		}
 		std::string ApplianceName = pElem->GetText();
 
 		if ((m_ThermostatID.empty()) && ((ApplianceName == "Anna") || (ApplianceName == "Adam")))
 		{
-			pAttribute = pAppliance->FirstAttribute();
-			if (pAttribute != nullptr)
-			{
-				std::string aName = pAttribute->Name();
-				if (aName == "id")
-				{
-					m_ThermostatID = pAttribute->Value();
-				}
-			}
+			m_ThermostatID = applianceID;
 		}
 
 		//Handle point_log
