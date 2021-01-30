@@ -463,6 +463,7 @@ void CAnnaThermostat::GetMeterDetails()
 	{
 		TiXmlHandle hAppliance = TiXmlHandle(pAppliance);
 		unsigned int batterypercentage = 255;
+		unsigned int applianceIDhex;
 		std::string applianceID = "";
 
 		pAttribute = pAppliance->FirstAttribute();
@@ -472,7 +473,8 @@ void CAnnaThermostat::GetMeterDetails()
 			if (aName == "id")
 			{
 				applianceID = pAttribute->Value();
-				Log(LOG_NORM, "Appliance ID: %s", applianceID.c_str());
+				applianceIDhex = strtoul(applianceID.substr(28,4).c_str(), NULL, 16);
+				Log(LOG_NORM, "Appliance ID: %s, %x", applianceID.c_str(), applianceIDhex);
 			}
 		} else {
 			Log(LOG_ERROR, "Appliance: Cannot find appliance ID");
@@ -517,7 +519,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 1, batterypercentage, temperature, ApplianceName + " " + sname);
+					SendTempSensor(applianceIDhex, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "illuminance")
@@ -526,7 +528,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float illuminance = (float)atof(tmpstr.c_str());
-					SendLuxSensor(appliance + 2, 1, batterypercentage, illuminance, ApplianceName + " " + sname);
+					SendLuxSensor(applianceIDhex, 1, batterypercentage, illuminance, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "thermostat")
@@ -535,7 +537,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendSetPointSensor(appliance + 3, temperature, ApplianceName + " " + sname);
+					SendSetPointSensor(applianceIDhex, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "intended_boiler_temperature")
@@ -544,7 +546,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 4, batterypercentage, temperature, ApplianceName + " " + sname);
+					SendTempSensor(applianceIDhex + 1, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "return_water_temperature")
@@ -553,7 +555,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 5, batterypercentage, temperature, ApplianceName + " " + sname);
+					SendTempSensor(applianceIDhex + 2, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "boiler_temperature")
@@ -562,7 +564,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 6, batterypercentage, temperature, ApplianceName + " " + sname);
+					SendTempSensor(applianceIDhex + 3, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "maximum_boiler_temperature")
@@ -571,7 +573,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float temperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 7, batterypercentage, temperature, ApplianceName + " " + sname);
+					SendTempSensor(applianceIDhex + 4, batterypercentage, temperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "central_heater_water_pressure")
@@ -580,7 +582,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float pressure = (float)atof(tmpstr.c_str());
-					SendPressureSensor(appliance + 8, 0, batterypercentage, pressure, ApplianceName + " " + sname);
+					SendPressureSensor(applianceIDhex, 0, batterypercentage, pressure, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "valve_position")
@@ -589,7 +591,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float valveposition = (float)atof(tmpstr.c_str()) * 100;
-					SendPercentageSensor(appliance + 9, 0, batterypercentage, valveposition, ApplianceName + " " + sname);
+					SendPercentageSensor(applianceIDhex, 0, batterypercentage, valveposition, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "battery")
@@ -598,7 +600,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					batterypercentage = (float)atof(tmpstr.c_str()) * 100;
-					SendPercentageSensor(appliance + 10, 0, batterypercentage, batterypercentage, ApplianceName + " " + sname);
+					SendPercentageSensor(applianceIDhex, 1, batterypercentage, batterypercentage, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "modulation_level")
@@ -607,7 +609,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float modulation = (float)atof(tmpstr.c_str()) * 100;
-					SendPercentageSensor(appliance + 11, 0, batterypercentage, modulation, ApplianceName + " " + sname);
+					SendPercentageSensor(applianceIDhex, 2, batterypercentage, modulation, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "maximum_modulation_level")
@@ -616,7 +618,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float maxmodulation = (float)atof(tmpstr.c_str()) * 100;
-					SendPercentageSensor(appliance + 12, 0, batterypercentage, maxmodulation, ApplianceName + " " + sname);
+					SendPercentageSensor(applianceIDhex, 3, batterypercentage, maxmodulation, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "lan_state")
@@ -627,11 +629,11 @@ void CAnnaThermostat::GetMeterDetails()
 					if (strcmp(tmpstr.c_str(), "up") == 0)
 					{
 
-						SendSwitch(appliance + 13, 1, batterypercentage, true, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 1, batterypercentage, true, 0, ApplianceName + " " + sname, m_Name);
 					}
 					else
 					{
-						SendSwitch(appliance + 13, 1, batterypercentage, false, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 1, batterypercentage, false, 0, ApplianceName + " " + sname, m_Name);
 					}
 				}
 			}
@@ -643,11 +645,11 @@ void CAnnaThermostat::GetMeterDetails()
 					if (strcmp(tmpstr.c_str(), "up") == 0)
 					{
 
-						SendSwitch(appliance + 14, 1, batterypercentage, true, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 2, batterypercentage, true, 0, ApplianceName + " " + sname, m_Name);
 					}
 					else
 					{
-						SendSwitch(appliance + 14, 1, batterypercentage, false, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 2, batterypercentage, false, 0, ApplianceName + " " + sname, m_Name);
 					}
 				}
 			}
@@ -658,11 +660,11 @@ void CAnnaThermostat::GetMeterDetails()
 				{
 					if (strcmp(tmpstr.c_str(), "on") == 0)
 					{
-						SendSwitch(appliance + 15, 1, 255, true, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 3, 255, true, 0, ApplianceName + " " + sname, m_Name);
 					}
 					else
 					{
-						SendSwitch(appliance + 15, 1, 255, false, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 3, 255, false, 0, ApplianceName + " " + sname, m_Name);
 					}
 				}
 			}
@@ -673,11 +675,11 @@ void CAnnaThermostat::GetMeterDetails()
 				{
 					if (strcmp(tmpstr.c_str(), "on") == 0)
 					{
-						SendSwitch(appliance + 16, 1, 255, true, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 4, 255, true, 0, ApplianceName + " " + sname, m_Name);
 					}
 					else
 					{
-						SendSwitch(appliance + 16, 1, 255, false, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 4, 255, false, 0, ApplianceName + " " + sname, m_Name);
 					}
 				}
 			}
@@ -688,11 +690,11 @@ void CAnnaThermostat::GetMeterDetails()
 				{
 					if (strcmp(tmpstr.c_str(), "on") == 0)
 					{
-						SendSwitch(appliance + 17, 1, 255, true, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 5, 255, true, 0, ApplianceName + " " + sname, m_Name);
 					}
 					else
 					{
-						SendSwitch(appliance + 17, 1, 255, false, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 5, 255, false, 0, ApplianceName + " " + sname, m_Name);
 					}
 				}
 			}
@@ -703,11 +705,11 @@ void CAnnaThermostat::GetMeterDetails()
 				{
 					if (strcmp(tmpstr.c_str(), "on") == 0)
 					{
-						SendSwitch(appliance + 18, 1, 255, true, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 6, 255, true, 0, ApplianceName + " " + sname, m_Name);
 					}
 					else
 					{
-						SendSwitch(appliance + 18, 1, 255, false, 0, ApplianceName + " " + sname, m_Name);
+						SendSwitch(applianceIDhex, 6, 255, false, 0, ApplianceName + " " + sname, m_Name);
 					}
 				}
 			}
@@ -718,7 +720,7 @@ void CAnnaThermostat::GetMeterDetails()
 				{
 					// Reported value is Wh per 15 minutes, to keep this stateless do a dirty conversion to W
 					float plugusage = (float)atof(tmpstr.c_str()) * 4.0;
-					SendWattMeter(appliance + 19, 0, batterypercentage, plugusage, ApplianceName + " " + sname);
+					SendWattMeter(applianceIDhex, 0, batterypercentage, plugusage, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "humidity")
@@ -727,7 +729,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float humidity = (float)atof(tmpstr.c_str());
-					SendHumiditySensor(appliance + 20, batterypercentage, humidity, ApplianceName + " " + sname);
+					SendHumiditySensor(applianceIDhex, batterypercentage, humidity, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "domestic_hot_water_temperature")
@@ -736,7 +738,7 @@ void CAnnaThermostat::GetMeterDetails()
 				if (!tmpstr.empty())
 				{
 					float hotwatertemperature = (float)atof(tmpstr.c_str());
-					SendTempSensor(appliance + 7, batterypercentage, hotwatertemperature, ApplianceName + " " + sname);
+					SendTempSensor(applianceIDhex + 5, batterypercentage, hotwatertemperature, ApplianceName + " " + sname);
 				}
 			}
 			else if (sname == "boiler_state")
